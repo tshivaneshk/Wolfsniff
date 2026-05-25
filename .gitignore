@@ -13,8 +13,7 @@ installer_output/
 *.exe
 
 # Local Data and Logs
-database/
-logs/
+*.log
 flows/*.pcap
 *.db
 *.sqlite3
