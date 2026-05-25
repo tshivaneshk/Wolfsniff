@@ -2,8 +2,9 @@ import pyqtgraph as pg
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QHeaderView
 from PySide6.QtCore import Qt
 import numpy as np
+from PySide6.QtWidgets import QTabWidget
 
-class TopologyTab(QWidget):
+class TopologyView(QWidget):
     def __init__(self):
         super().__init__()
         layout = QHBoxLayout(self)
@@ -145,3 +146,43 @@ class TopologyTab(QWidget):
         self.table.setRowCount(0)
         self.lbl_selected.setText("Selected Node: None")
         self.lbl_conns.setText("Connections: 0")
+
+class TopologyTab(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        
+        self.tab_widget = QTabWidget()
+        self.tab_widget.setStyleSheet("""
+            QTabWidget::pane { border: none; }
+            QTabBar::tab { background: #1E293B; color: #94A3B8; padding: 10px 20px; border-top-left-radius: 4px; border-top-right-radius: 4px; margin-right: 2px; }
+            QTabBar::tab:selected { background: #0F172A; color: #06B6D4; font-weight: bold; border-bottom: 2px solid #06B6D4; }
+        """)
+        layout.addWidget(self.tab_widget)
+        
+        self.live_view = TopologyView()
+        self.tab_widget.addTab(self.live_view, "Live Capture")
+        
+        self.pcap_views = {}
+        
+    def add_flow(self, flow_data):
+        self.live_view.add_flow(flow_data)
+        
+    def clear_all(self):
+        self.live_view.clear_all()
+        
+    def add_pcap_tab(self, tab_id, core_instance):
+        view = TopologyView()
+        core_instance.flow_processed.connect(view.add_flow)
+        self.tab_widget.addTab(view, tab_id)
+        self.pcap_views[tab_id] = view
+        
+    def remove_pcap_tab(self, tab_id):
+        if tab_id in self.pcap_views:
+            view = self.pcap_views[tab_id]
+            idx = self.tab_widget.indexOf(view)
+            if idx != -1:
+                self.tab_widget.removeTab(idx)
+            view.deleteLater()
+            del self.pcap_views[tab_id]

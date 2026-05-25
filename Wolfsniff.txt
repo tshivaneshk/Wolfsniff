@@ -1,0 +1,163 @@
+Wolfsniff
+Advanced Hybrid Network Intrusion Detection & Threat Analytics Platform
+
+Wolfsniff is a high-performance hybrid intrusion detection and network telemetry platform engineered for modern cyber defense operations. Combining native packet capture pipelines with machine learning–driven behavioral analysis, Wolfsniff enables real-time detection of anomalous traffic patterns, suspicious flow activity, and advanced network threats across enterprise environments.
+
+Designed for standalone deployment, Wolfsniff operates entirely offline with localized analytics, forensic logging, and adaptive threat evaluation capabilities.
+
+Overview
+
+Traditional signature-based IDS platforms struggle to identify evolving behavioral attacks and zero-day traffic deviations. Wolfsniff addresses this challenge through a hybrid architecture that integrates:
+
+Native C++ packet acquisition
+High-throughput traffic inspection
+Machine learning inference pipelines
+Adaptive anomaly thresholding
+Offline forensic analysis
+
+The platform is optimized for cybersecurity researchers, blue-team environments, lab infrastructures, educational security operations, and private network monitoring deployments.
+
+Key Features
+Real-Time Packet Intelligence
+Native libpcap/Npcap integration via ctypes
+High-speed packet ingestion with minimal packet loss
+Continuous network flow analysis and telemetry extraction
+Machine Learning Detection Engine
+Random Forest–based threat classification
+Evaluates 42+ network flow characteristics
+Behavioral anomaly identification using UNSW-NB15 training data
+Adaptive Threat Scoring
+Dynamic threshold evaluation profiles:
+Strict
+Balanced
+Conservative
+Reduces environmental noise and false-positive escalation
+Offline PCAP Forensics
+Rapid ingestion of historical PCAP captures
+Threat reconstruction and retrospective analysis workflows
+Local forensic event generation and session review
+Localized Security Architecture
+Fully offline-capable operation
+SQLite-based local evidence storage
+No external telemetry transmission
+No cloud dependency
+Technology Stack
+Layer	Technology
+Core Engine	Python 3.11
+Packet Processing	Scapy + Native libpcap/Npcap
+Machine Learning	Scikit-Learn
+Data Processing	Pandas
+Desktop Interface	PySide6 (Qt6)
+Local Database	SQLite
+Native Integration	ctypes + WinPcap/Npcap API
+System Architecture
+┌─────────────────────┐
+│  Network Interface  │
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│ Native Packet Layer │
+│   (Npcap/libpcap)   │
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│ Flow Extraction     │
+│ + Feature Engine    │
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│ ML Detection Core   │
+│ Random Forest IDS   │
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│ Alert & Forensics   │
+│ SQLite Event Store  │
+└─────────────────────┘
+Development Setup
+1. Clone Repository
+git clone https://github.com/tshivaneshk/Wolfsniff.git
+cd Wolfsniff
+2. Install Dependencies
+pip install -r requirements.txt
+3. Install Packet Drivers
+
+Download and install the official Npcap driver:
+
+Npcap Official Website
+
+During installation, enable:
+
+Install Npcap in WinPcap API-compatible Mode
+4. Launch Wolfsniff
+python main.py
+Production Build (Windows)
+
+Wolfsniff supports standalone Windows deployment using PyInstaller and Inno Setup.
+
+Build Executable
+pyinstaller -y --noconsole --onedir --icon="icon.ico" ^
+--add-data "icon.ico;." ^
+--add-data "Logo.png;." ^
+--add-data "ml/rf_model.joblib;ml" ^
+--add-data "ml/encoders.joblib;ml" ^
+--add-data "ml/thresholds.json;ml" ^
+--name Wolfsniff_v1.0 main.py
+Build Installer
+
+Compile:
+
+wolfsniff_installer.iss
+
+using:
+
+Inno Setup Compiler
+
+Security & Privacy
+
+Wolfsniff is designed with localized operational privacy in mind.
+
+No cloud synchronization
+No external API dependency
+No remote telemetry collection
+All forensic data remains on-device
+
+This project is intended for authorized network monitoring, cybersecurity research, educational environments, and defensive security analysis.
+
+Repository Structure
+Wolfsniff/
+├── capture/        # Native packet acquisition
+├── core/           # Detection and analysis engine
+├── dataset/        # ML training datasets
+├── gui/            # PySide6 desktop interface
+├── ml/             # Trained ML artifacts
+├── assets/         # UI resources and branding
+├── main.py         # Application entry point
+├── requirements.txt
+└── README.md
+Future Roadmap
+Advanced protocol fingerprinting
+Multi-model anomaly correlation
+Threat intelligence rule integration
+Real-time dashboard metrics
+Distributed sensor support
+SIEM export pipelines
+GPU-assisted inference acceleration
+License
+
+Released under the MIT License.
+
+Contributions involving:
+
+detection engineering
+packet analysis
+machine learning pipelines
+UI/UX improvements
+protocol parsing
+performance optimization
+
+are welcome.

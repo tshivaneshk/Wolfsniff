@@ -15,7 +15,7 @@ installer_output/
 # Local Data and Logs
 database/
 logs/
-flows/
+flows/*.pcap
 *.db
 *.sqlite3
 *.pcap

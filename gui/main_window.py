@@ -307,8 +307,11 @@ class MainWindow(QMainWindow):
         self.dashboard_tab.export_pcap_requested.connect(self.on_export_flow_pcap)
         
         # Bridge offline PCAP signals to global UI
-        self.analyze_tab.offline_flow_processed.connect(self.topology_tab.add_flow)
-        self.analyze_tab.offline_alert_triggered.connect(self.alerts_tab.add_alert)
+        self.analyze_tab.pcap_opened.connect(self.alerts_tab.add_pcap_tab)
+        self.analyze_tab.pcap_opened.connect(self.topology_tab.add_pcap_tab)
+        self.analyze_tab.pcap_closed.connect(self.alerts_tab.remove_pcap_tab)
+        self.analyze_tab.pcap_closed.connect(self.topology_tab.remove_pcap_tab)
+        
         self.analyze_tab.offline_stats_updated.connect(self.stats_tab.update_stats)
         self.analyze_tab.offline_stats_updated.connect(self.history_tab._on_search)
         self.analyze_tab.offline_stats_updated.connect(self._update_sidebar_stats)

@@ -9,9 +9,10 @@ class AnalyzeTab(QWidget):
     import_requested = Signal(str)
     
     # Global bridge signals
-    offline_flow_processed = Signal(dict)
-    offline_alert_triggered = Signal(dict)
     offline_stats_updated = Signal(dict)
+    
+    pcap_opened = Signal(str, object)
+    pcap_closed = Signal(str)
     
     def __init__(self):
         super().__init__()
@@ -90,8 +91,6 @@ class AnalyzeTab(QWidget):
         core.flow_processed.connect(dash.add_flow)
         dash.export_pcap_requested.connect(lambda flow_data, c=core: self._on_export_flow_pcap(flow_data, c))
         
-        core.flow_processed.connect(self.offline_flow_processed.emit)
-        core.alert_triggered.connect(self.offline_alert_triggered.emit)
         core.stats_updated.connect(self.offline_stats_updated.emit)
         
         tab_name = os.path.basename(file_path)
@@ -100,6 +99,8 @@ class AnalyzeTab(QWidget):
         
         # Store core reference so it is kept alive and can be stopped
         dash.core_ref = core 
+        
+        self.pcap_opened.emit(tab_name, core)
         
         try:
             core.start_capture(None, policy, offline_file=file_path)
@@ -124,11 +125,14 @@ class AnalyzeTab(QWidget):
             self._create_pcap_tab(file_path, policy)
 
     def _on_tab_close(self, index):
+        tab_name = self.tab_widget.tabText(index)
         dash = self.tab_widget.widget(index)
         if hasattr(dash, 'core_ref') and dash.core_ref.running:
             dash.core_ref.stop_capture()
         self.tab_widget.removeTab(index)
         dash.deleteLater()
+        
+        self.pcap_closed.emit(tab_name)
         
         if self.tab_widget.count() == 0:
             self.stack.setCurrentIndex(0)
