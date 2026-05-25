@@ -1,6 +1,6 @@
 # Wolfsniff
 
-**The Next-Generation Hybrid Network Intrusion Detection System**
+**The Hybrid Network Intrusion Detection System**
 
 Wolfsniff is an advanced, standalone network intrusion detection and forensics platform engineered for enterprise security operations. It integrates the high-throughput packet ingestion of native C++ libpcap with a robust Random Forest Machine Learning core to detect anomalies, behavioral threats, and zero-day deviations that traditional signature-based platforms miss.
 
